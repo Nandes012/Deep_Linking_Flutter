@@ -86,4 +86,4 @@ class DetailScreen extends StatelessWidget {
       body: Center(child: Text('You opened item ID: $id')),
 );
 }
-}
+} 
