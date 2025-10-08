@@ -45,16 +45,31 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _handleIncomingLink(Uri uri) {
-    // Misal link: myapp://details?id=123
+    // Example links:
+    // - myapp://details?id=123  (query param style)
+    // - myapp://profile/alex    (path segment style)
+
+    // details route (query parameter)
     if (uri.pathSegments.isNotEmpty && uri.pathSegments.first == 'details') {
       final id = uri.queryParameters['id'] ?? 'unknown';
       Navigator.push(
         context,
         MaterialPageRoute(builder: (_) => DetailScreen(id: id)),
       );
-    } else {
-      setState(() => _status = 'Opened link: $uri');
+      return;
     }
+
+    // profile route (path segments)
+    if (uri.pathSegments.isNotEmpty && uri.pathSegments.first == 'profile') {
+      final username = uri.pathSegments.length > 1 ? uri.pathSegments[1] : 'guest';
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => ProfileScreen(username: username)),
+      );
+      return;
+    }
+
+    setState(() => _status = 'Opened link: $uri');
   }
 
   @override
@@ -84,6 +99,19 @@ class DetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text('Details')),
       body: Center(child: Text('You opened item ID: $id')),
-);
+    );
+  }
 }
-} 
+
+class ProfileScreen extends StatelessWidget {
+  final String username;
+  const ProfileScreen({required this.username, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Profile')),
+      body: Center(child: Text('Hello, $username!')),
+    );
+  }
+}
